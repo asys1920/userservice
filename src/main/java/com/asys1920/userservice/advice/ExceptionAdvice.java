@@ -1,18 +1,38 @@
 package com.asys1920.userservice.advice;
 
-import com.asys1920.userservice.exceptions.ValidationException;
-import org.springframework.http.HttpStatus;
+import lombok.Data;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.rest.core.RepositoryConstraintViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@RestControllerAdvice
-public class ExceptionAdvice {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    @ExceptionHandler(ValidationException.class)
-    @ResponseBody
-    public ResponseEntity<String> handleValidationException(ValidationException ex){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+@ControllerAdvice
+public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({RepositoryConstraintViolationException.class})
+    public ResponseEntity<ErrorMessage> handleRepositoryConstraintViolationException(
+            RepositoryConstraintViolationException ex) {
+        List<String> errors = ex.getErrors().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+
+        return ResponseEntity.badRequest().body(new ErrorMessage(errors));
     }
+
+    @Data
+    private class ErrorMessage {
+        private final String cause = "VALIDATION FAILED";
+        private List<String> description;
+
+        public ErrorMessage(List<String> description) {
+            this.description = description;
+        }
+    }
+
+
 }

@@ -1,12 +1,25 @@
 package com.asys1920.userservice.advice;
 
 import com.asys1920.userservice.model.User;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.time.Instant;
+import java.text.DateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class UserValidator implements Validator {
+
+    private static Pattern DATE_PATTERN = Pattern.compile(
+            "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))$");
+
     @Override
     public boolean supports(Class<?> aClass) {
         return User.class.equals(aClass);
@@ -16,39 +29,43 @@ public class UserValidator implements Validator {
     public void validate(Object o, Errors errors) {
         User user = (User) o;
         if (isEmailInvalid(user.getEmailAddress())) {
-            String field = "emailAddress";
-            errors.rejectValue(field, getInvalidationIndicator(field), getInvalidationMessage(field));
+            addErrorToResponse("emailAddress", errors);
         }
         if (isStringInvalid(user.getFirstName())) {
-            String field = "firstName";
-            errors.rejectValue(field, getInvalidationIndicator(field), getInvalidationMessage(field));
+            addErrorToResponse("firstName", errors);
         }
         if (isStringInvalid(user.getLastName())) {
-            String field = "lastName";
-            errors.rejectValue(field, getInvalidationIndicator(field), getInvalidationMessage(field));
+            addErrorToResponse("lastName", errors);
         }
         if (isStringInvalid(user.getUserName())) {
-            String field = "userName";
-            errors.rejectValue(field, getInvalidationIndicator(field), getInvalidationMessage(field));
+            addErrorToResponse("userName", errors);
         }
-
-        if (isInstantInvalid(user.getExpirationDateDriversLicense())){
-            String field = "expirationDateDriversLicense";
-            errors.rejectValue(field, getInvalidationIndicator(field), getInvalidationMessage(field));
+        try {
+            if (isDateInvalid(
+                    LocalDate.parse(user.getExpirationDateDriversLicense(), DateTimeFormatter.ISO_LOCAL_DATE))) {
+                addErrorToResponse("expirationDateDriversLicense", errors);
+            }
+        } catch (DateTimeException ex) {
+            addErrorToResponse("expirationDateDriversLicense", errors);
         }
     }
 
-    private boolean isInstantInvalid(Instant instant) {
+    private boolean isDateInvalid(LocalDate localDate) {
+        if (localDate == null) {
+            return true;
+        }
         // regex
-
+        //DATE_PATTERN.matcher(date).matches();
         // is in past
-        isInstantInPast(instant);
-
-        return false;
+        return isDateInPast(localDate);
     }
 
-    private boolean isInstantInPast(Instant instant) {
-        return false;
+    private boolean isDateInPast(LocalDate localDate) {
+        return localDate.isBefore(LocalDate.now());
+    }
+
+    private void addErrorToResponse(String field, Errors errors) {
+        errors.rejectValue(field, getInvalidationIndicator(field), getInvalidationMessage(field));
     }
 
     private String getInvalidationIndicator(String field) {
@@ -81,4 +98,5 @@ public class UserValidator implements Validator {
         }
         return false;
     }
+
 }

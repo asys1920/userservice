@@ -3,23 +3,16 @@ package com.asys1920.userservice.repository;
 
 import com.asys1920.userservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 
-import java.util.List;
+import java.util.Date;
 
-@RepositoryRestResource(collectionResourceRel = "user", path = "user")
 public interface UserRepository extends JpaRepository<User, Long> {
-    List<User> findByLastName(@Param("lastName") String name);
-    List<User> findAll();
 
 
-    @Override
-    @RestResource(exported = false)
-    void deleteById(Long aLong);
-
-    @Override
-    @RestResource(exported = false)
-    void delete(User entity);
+    @Modifying
+    @Query("update User u set u.expirationDateDriversLicense = :newExpirationDate where u.id = :id")
+    void setExpirationDateDriversLicense(@Param("id") Long id, @Param("newExpirationDate") String newExpirationDate);
 }

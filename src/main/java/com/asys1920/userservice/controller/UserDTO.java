@@ -1,24 +1,18 @@
-package com.asys1920.userservice.model;
+package com.asys1920.userservice.controller;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Data
-@Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+public class UserDTO {
     Long id;
     String firstName;
     String lastName;
     String userName;
-    @Pattern(regexp = "^(.+)@(.+)$")
     String emailAddress;
-    //@Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     String expirationDateDriversLicense;
     boolean isActive;
     boolean isBanned;

@@ -1,17 +1,15 @@
 package com.asys1920.userservice.advice;
 
 import com.asys1920.userservice.model.User;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.text.DateFormat;
-import java.time.*;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class UserValidator implements Validator {
 
     private static Pattern DATE_PATTERN = Pattern.compile(
@@ -41,10 +39,10 @@ public class UserValidator implements Validator {
             addErrorToResponse("userName", errors);
         }
         try {
-            if (isDateInvalid(
+            /*if (isDateInvalid(
                     LocalDate.parse(user.getExpirationDateDriversLicense(), DateTimeFormatter.ISO_LOCAL_DATE))) {
                 addErrorToResponse("expirationDateDriversLicense", errors);
-            }
+            }*/
         } catch (DateTimeException ex) {
             addErrorToResponse("expirationDateDriversLicense", errors);
         }

@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.text.SimpleDateFormat;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,9 +27,11 @@ public class UserServiceApplicationTests {
     @Autowired
     private UserRepository userRepository;
 
+    String userEndpoint = "/users";
+
     @Test
     public void should_ReturnValid_When_Get_ValidRequest() throws Exception {
-        mockMvc.perform(get("/user"))
+        mockMvc.perform(get(userEndpoint))
                 .andExpect(status().isOk());
     }
 
@@ -39,7 +43,7 @@ public class UserServiceApplicationTests {
         body.put("userName", "Fussballgott");
         body.put("emailAddress", "a@b.c");
         body.put("expirationDateDriversLicense", "2022-05-A");
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post(userEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
                 .accept(MediaType.APPLICATION_JSON))
@@ -55,7 +59,7 @@ public class UserServiceApplicationTests {
         body.put("userName", "Fussballgott");
         body.put("emailAddress", "a@b.c");
         body.put("expirationDateDriversLicense", "2005-05-01");
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post(userEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
                 .accept(MediaType.APPLICATION_JSON))
@@ -72,7 +76,7 @@ public class UserServiceApplicationTests {
         body.put("expirationDateDriversLicense", "2022-05-01");
 
         //Create a user
-        MvcResult result = mockMvc.perform(post("/user")
+        MvcResult result = mockMvc.perform(post(userEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
                 .accept(MediaType.APPLICATION_JSON))
@@ -87,15 +91,14 @@ public class UserServiceApplicationTests {
         JSONObject response = new JSONObject(result.getResponse().getContentAsString());
         String link = response.getJSONObject("_links").getString("user");
         String[] splitLink = link.split("/");
-        String id =  splitLink[splitLink.length-1].split("\"")[0];
+        String id = splitLink[splitLink.length - 1].split("\"")[0];
         //Post to the id from the user just created
-        mockMvc.perform(post("/user/"+id)
+        mockMvc.perform(post(userEndpoint+"/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
-
 
 
     @Test
@@ -106,7 +109,7 @@ public class UserServiceApplicationTests {
         body.put("userName", "Fussballgott");
         body.put("emailAddress", "a@b.c");
         body.put("expirationDateDriversLicense", "2022-05-05");
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post(userEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
                 .accept(MediaType.APPLICATION_JSON))
@@ -126,10 +129,12 @@ public class UserServiceApplicationTests {
         user.setLastName("Meier");
         user.setUserName("Fussballgott");
         user.setEmailAddress("a@b.c");
+        //user.setExpirationDateDriversLicense(new SimpleDateFormat("yyyy-MM-dd")
+        //        .parse("2022-05-06"));
         user.setExpirationDateDriversLicense("2022-05-06");
         userRepository.save(user);
 
-        mockMvc.perform(get("/user/" + user.getId())
+        mockMvc.perform(get(userEndpoint+"/" + user.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Alexander"))

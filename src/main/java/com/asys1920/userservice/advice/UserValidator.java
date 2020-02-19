@@ -1,12 +1,11 @@
 package com.asys1920.userservice.advice;
 
-import com.asys1920.userservice.model.User;
+import com.asys1920.model.User;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 @Deprecated

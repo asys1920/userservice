@@ -1,11 +1,10 @@
 package com.asys1920.userservice.service;
 
-import com.asys1920.userservice.model.User;
+import com.asys1920.model.User;
 import com.asys1920.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -28,6 +27,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public void deleteUser(long id) {
+        userRepository.deleteById(id);
+    }
+
     public User getUser(long id) {
         return userRepository.findById(id).get();
     }
@@ -36,7 +39,7 @@ public class UserService {
     public User updateDriversLicenseExpirationDate(Long id, String newExpirationDate) {
         Optional<User> optUser = userRepository.findById(id);
         if (optUser.isPresent()) {
-            userRepository.setExpirationDateDriversLicense(id,newExpirationDate);
+            userRepository.setExpirationDateDriversLicense(id, newExpirationDate);
             User user = userRepository.findById(id).get();
             user.setExpirationDateDriversLicense(newExpirationDate);
             return user;

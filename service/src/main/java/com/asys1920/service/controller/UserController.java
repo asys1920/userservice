@@ -23,12 +23,13 @@ import java.util.Set;
 public class UserController {
 
     final UserService userService;
+    private final String PATH = "/users";
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
+    @PostMapping(PATH)
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExsitsException {
         Set<ConstraintViolation<UserDTO>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(userDTO);
         if (!validate.isEmpty()) {
@@ -42,7 +43,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/users/{id}")
+    @GetMapping(PATH + "/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
 
@@ -51,22 +52,15 @@ public class UserController {
                 HttpStatus.OK);
     }
 
-    @PatchMapping("/users/{id}/driverslicenseexpirationdate")
-    public ResponseEntity<UserDTO> setDriversLicenseExpirationDate(@PathVariable long id, @RequestBody JSONObject body) throws ValidationException {
-        try {
-            Date expirationDateDriversLicense = new SimpleDateFormat("yyyy-MM-dd")
-                    .parse(body.getAsString("expirationDateDriversLicense"));
-            User user = userService.updateDriversLicenseExpirationDate(id, body.getAsString("expirationDateDriversLicense"));
-            return new ResponseEntity<>(
-                    UserMapper.INSTANCE.userToUserDTO(user),
-                    HttpStatus.OK);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        throw new ValidationException("Submitted expirationDateDriversLicense is in the wrong format");
+    @PatchMapping(PATH + "/{id}")
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) throws ValidationException {
+        User user1 = UserMapper.INSTANCE.userDTOtoUser(userDTO);
+        User user = userService.updateUser(user1);
+        UserDTO responseDTO = UserMapper.INSTANCE.userToUserDTO(user);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping(PATH + "/{id}")
     public ResponseEntity deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
         return new ResponseEntity(HttpStatus.OK);

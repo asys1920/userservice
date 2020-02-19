@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
+
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Modifying
     @Query("update User u set u.expirationDateDriversLicense = :newExpirationDate where u.id = :id")
-    void setExpirationDateDriversLicense(@Param("id") Long id, @Param("newExpirationDate") String newExpirationDate);
+    void setExpirationDateDriversLicense(@Param("id") Long id, @Param("newExpirationDate") Instant newExpirationDate);
 }

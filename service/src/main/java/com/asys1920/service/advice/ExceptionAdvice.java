@@ -30,7 +30,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {UserAlreadyExsitsException.class})
     @ResponseBody
     public ResponseEntity<String> handleValidationException(Exception ex) {
-        return new ResponseEntity<>(jsonFromException(ex), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(jsonFromException(ex), HttpStatus.CONFLICT);
     }
 
     @Data

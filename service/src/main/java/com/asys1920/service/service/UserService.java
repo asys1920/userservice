@@ -6,6 +6,7 @@ import com.asys1920.service.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,15 +40,7 @@ public class UserService {
     }
 
     @Transactional
-    public User updateDriversLicenseExpirationDate(Long id, String newExpirationDate) {
-        Optional<User> optUser = userRepository.findById(id);
-        if (optUser.isPresent()) {
-            userRepository.setExpirationDateDriversLicense(id, newExpirationDate);
-            User user = userRepository.findById(id).get();
-            user.setExpirationDateDriversLicense(newExpirationDate);
-            return user;
-        } else {
-            throw new NoSuchElementException("There is no user for id " + id);
-        }
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 }

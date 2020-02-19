@@ -1,6 +1,6 @@
 package com.asys1920.userservice;
 
-import com.asys1920.userservice.model.User;
+import com.asys1920.model.User;
 import com.asys1920.userservice.repository.UserRepository;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.text.SimpleDateFormat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

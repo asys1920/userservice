@@ -3,11 +3,12 @@ package com.asys1920.userservice;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.validation.Validator;
 
-
+@EntityScan("com.asys1920.*")
 @SpringBootApplication
 public class UserServiceApplication implements RepositoryRestConfigurer {
 

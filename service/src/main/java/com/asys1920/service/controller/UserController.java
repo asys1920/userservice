@@ -6,19 +6,18 @@ import com.asys1920.model.User;
 import com.asys1920.service.exceptions.UserAlreadyExsitsException;
 import com.asys1920.service.exceptions.ValidationException;
 import com.asys1920.service.service.UserService;
-import net.minidev.json.JSONObject;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validation;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Set;
 
+@Api
 @RestController
 public class UserController {
 
@@ -29,40 +28,45 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(PATH)
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExsitsException {
-        Set<ConstraintViolation<UserDTO>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(userDTO);
-        if (!validate.isEmpty()) {
-            throw new ValidationException(validate);
-
-        }
-        User user1 = UserMapper.INSTANCE.userDTOtoUser(userDTO);
-        User user = userService.createUser(user1);
-        UserDTO responseDTO = UserMapper.INSTANCE.userToUserDTO(user);
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH)
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExsitsException {
+        validateUserDTO(userDTO);
+        User sendUser = UserMapper.INSTANCE.userDTOtoUser(userDTO);
+        User createdUser = userService.createUser(sendUser);
+        UserDTO responseDTO = UserMapper.INSTANCE.userToUserDTO(createdUser);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
 
-    @GetMapping(PATH + "/{id}")
+
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH + "/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
-
         return new ResponseEntity<>(
                 UserMapper.INSTANCE.userToUserDTO(user),
                 HttpStatus.OK);
     }
 
-    @PatchMapping(PATH + "/{id}")
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) throws ValidationException {
-        User user1 = UserMapper.INSTANCE.userDTOtoUser(userDTO);
-        User user = userService.updateUser(user1);
-        UserDTO responseDTO = UserMapper.INSTANCE.userToUserDTO(user);
+    @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH + "/{id}")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) throws ValidationException {
+        validateUserDTO(userDTO);
+        User sendUser = UserMapper.INSTANCE.userDTOtoUser(userDTO);
+        User createdUser = userService.updateUser(sendUser);
+        UserDTO responseDTO = UserMapper.INSTANCE.userToUserDTO(createdUser);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping(PATH + "/{id}")
-    public ResponseEntity deleteUser(@PathVariable long id) {
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH + "/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void validateUserDTO(UserDTO userDTO) throws ValidationException {
+        Set<ConstraintViolation<UserDTO>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(userDTO);
+        if (!validate.isEmpty()) {
+            throw new ValidationException(validate);
+        }
     }
 }

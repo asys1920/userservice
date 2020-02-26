@@ -10,9 +10,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.asys1920</groupId>
-    <artifactId>service</artifactId>
+    <artifactId>userservice</artifactId>
     <version>1.0.0</version>
-    <name>service</name>
+    <name>userservice</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -87,7 +87,6 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
 
     </dependencies>
 

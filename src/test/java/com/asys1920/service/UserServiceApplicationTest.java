@@ -1,29 +1,33 @@
 package com.asys1920.service;
 
+import com.asys1920.model.Bill;
 import com.asys1920.model.User;
 import com.asys1920.service.repository.UserRepository;
+import com.asys1920.service.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Instant;
-import java.util.Random;
+import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ServiceApplicationTests {
+class UserServiceApplicationTests {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -62,18 +66,6 @@ class ServiceApplicationTests {
     public void should_ReturnValidUser_When_CreatingValidUser() throws Exception {
         JSONObject body = getValidUser();
         //Create a user
-        MvcResult result = mockMvc.perform(post(userEndpoint)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body.toString())
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.firstName").value(body.get("firstName")))
-                .andExpect(jsonPath("$.lastName").value(body.get("lastName")))
-                .andExpect(jsonPath("$.emailAddress").value(body.get("emailAddress")))
-                .andExpect(jsonPath("$.userName").value(body.get("userName")))
-                .andExpect(jsonPath("$.expirationDateDriversLicense").value(body.get("expirationDateDriversLicense")))
-                .andReturn();
     }
 
     @Test
@@ -129,7 +121,6 @@ class ServiceApplicationTests {
     /* Test PATCH /users */
     @Test
     public void should_ReturnValidUser_When_UpdatingValidUser() throws Exception {
-        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("firstName", "Gerd");
         mockMvc.perform(patch(userEndpoint + "/" + getRandomId())
@@ -148,7 +139,6 @@ class ServiceApplicationTests {
 
     @Test
     public void should_ReturnErrorMessage_When_UpdatingInvalidUser_InvalidEmail() throws Exception {
-        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("emailAddress", "aaaaaaaaaabbbbbbbbbbbbbb@ccccccccc");
         mockMvc.perform(patch(userEndpoint + "/" + getRandomId())
@@ -161,7 +151,6 @@ class ServiceApplicationTests {
 
     @Test
     public void should_ReturnErrorMessage_When_UpdatingInvalidUser_OldDriversLicense() throws Exception {
-        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("expirationDateDriversLicense", "2005-05-01");
         mockMvc.perform(patch(userEndpoint + "/" + getRandomId())
@@ -231,3 +220,4 @@ class ServiceApplicationTests {
         return user;
     }
 }
+

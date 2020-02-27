@@ -10,8 +10,4 @@ public class ValidationException extends Exception {
                 ConstraintViolation::getMessage)
                 .collect(Collectors.joining(System.lineSeparator())));
     }
-
-    public ValidationException(String s) {
-        super(s);
-    }
 }

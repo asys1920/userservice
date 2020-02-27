@@ -1,6 +1,6 @@
 package com.asys1920.service.advice;
 
-import com.asys1920.service.exceptions.UserAlreadyExsitsException;
+import com.asys1920.service.exceptions.UserAlreadyExistsException;
 import com.asys1920.service.exceptions.ValidationException;
 import lombok.Data;
 import net.minidev.json.JSONObject;
@@ -35,7 +35,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(jsonFromException(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {UserAlreadyExsitsException.class})
+    @ExceptionHandler(value = {UserAlreadyExistsException.class})
     @ResponseBody
     public ResponseEntity<String> handleAlreadyExistsException(Exception ex) {
         return new ResponseEntity<>(jsonFromException(ex), HttpStatus.CONFLICT);
@@ -48,7 +48,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Data
-    private class ErrorMessage {
+    private static class ErrorMessage {
         private final String cause = "VALIDATION FAILED";
         private List<String> description;
 

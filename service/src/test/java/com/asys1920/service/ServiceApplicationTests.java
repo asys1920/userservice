@@ -13,8 +13,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Instant;
+import java.util.Random;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -35,7 +39,7 @@ class ServiceApplicationTests {
     /* Test GET /users/{id} */
     @Test
     public void should_ReturnValidUser_When_RequestingValidId() throws Exception {
-        User user = createUser();
+        User user = createdUser();
         mockMvc.perform(get(userEndpoint + "/" + user.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -57,7 +61,8 @@ class ServiceApplicationTests {
     @Test
     public void should_ReturnValidUser_When_CreatingValidUser() throws Exception {
         JSONObject body = getValidUser();
-        mockMvc.perform(post(userEndpoint)
+        //Create a user
+        MvcResult result = mockMvc.perform(post(userEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
                 .accept(MediaType.APPLICATION_JSON))
@@ -65,6 +70,7 @@ class ServiceApplicationTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName").value(body.get("firstName")))
                 .andExpect(jsonPath("$.lastName").value(body.get("lastName")))
+                .andExpect(jsonPath("$.emailAddress").value(body.get("emailAddress")))
                 .andExpect(jsonPath("$.userName").value(body.get("userName")))
                 .andExpect(jsonPath("$.expirationDateDriversLicense").value(body.get("expirationDateDriversLicense")))
                 .andReturn();
@@ -95,6 +101,7 @@ class ServiceApplicationTests {
     @Test
     public void should_ReturnErrorMessage_When_CreatingUserWithTakenId() throws Exception {
         JSONObject body = getValidUser();
+        //Create a user
         MvcResult result = mockMvc.perform(post(userEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString())
@@ -122,7 +129,7 @@ class ServiceApplicationTests {
     /* Test PATCH /users */
     @Test
     public void should_ReturnValidUser_When_UpdatingValidUser() throws Exception {
-        createUser();
+        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("firstName", "Gerd");
         mockMvc.perform(patch(userEndpoint + "/" + getRandomId())
@@ -141,7 +148,7 @@ class ServiceApplicationTests {
 
     @Test
     public void should_ReturnErrorMessage_When_UpdatingInvalidUser_InvalidEmail() throws Exception {
-        User user = createUser();
+        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("emailAddress", "aaaaaaaaaabbbbbbbbbbbbbb@ccccccccc");
         mockMvc.perform(patch(userEndpoint + "/" + getRandomId())
@@ -154,7 +161,7 @@ class ServiceApplicationTests {
 
     @Test
     public void should_ReturnErrorMessage_When_UpdatingInvalidUser_OldDriversLicense() throws Exception {
-        User user = createUser();
+        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("expirationDateDriversLicense", "2005-05-01");
         mockMvc.perform(patch(userEndpoint + "/" + getRandomId())
@@ -166,7 +173,7 @@ class ServiceApplicationTests {
 
     @Test
     public void should_ReturnErrorMessage_When_UpdatingInvalidUser_InvalidDriversLicense() throws Exception {
-        User user = createUser();
+        User user = createdUser();
         JSONObject body = getValidUser();
         body.put("expirationDateDriversLicense", "2022-05-A");
         mockMvc.perform(patch(userEndpoint + "/" + user.getId())
@@ -179,7 +186,7 @@ class ServiceApplicationTests {
     /* Test Delete /users/{id} */
     @Test
     public void should_ReturnOk_When_DeletingValidId() throws Exception {
-        User user = createUser();
+        User user = createdUser();
         mockMvc.perform(delete(userEndpoint + "/" + user.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -212,7 +219,7 @@ class ServiceApplicationTests {
     }
 
 
-    private User createUser() throws JSONException {
+    private User createdUser() throws JSONException {
         User user = new User();
         JSONObject validUser = getValidUser();
         user.setFirstName(validUser.getString("firstName"));

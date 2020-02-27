@@ -3,7 +3,7 @@ package com.asys1920.service.controller;
 import com.asys1920.dto.UserDTO;
 import com.asys1920.mapper.UserMapper;
 import com.asys1920.model.User;
-import com.asys1920.service.exceptions.UserAlreadyExistsException;
+import com.asys1920.service.exceptions.UserAlreadyExsitsException;
 import com.asys1920.service.exceptions.ValidationException;
 import com.asys1920.service.service.UserService;
 import io.swagger.annotations.Api;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH)
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExistsException {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExsitsException {
         validateUserDTO(userDTO);
         User sendUser = UserMapper.INSTANCE.userDTOtoUser(userDTO);
         User createdUser = userService.createUser(sendUser);

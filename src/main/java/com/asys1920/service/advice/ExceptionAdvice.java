@@ -1,14 +1,16 @@
 package com.asys1920.service.advice;
 
-import com.asys1920.service.exceptions.UserAlreadyExistsException;
+import com.asys1920.service.exceptions.UserAlreadyExsitsException;
 import com.asys1920.service.exceptions.ValidationException;
 import lombok.Data;
 import net.minidev.json.JSONObject;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.rest.core.RepositoryConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Component("userAdvice")
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({RepositoryConstraintViolationException.class})
@@ -35,7 +38,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(jsonFromException(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {UserAlreadyExistsException.class})
+    @ExceptionHandler(value = {UserAlreadyExsitsException.class})
     @ResponseBody
     public ResponseEntity<String> handleAlreadyExistsException(Exception ex) {
         return new ResponseEntity<>(jsonFromException(ex), HttpStatus.CONFLICT);
@@ -48,7 +51,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Data
-    private static class ErrorMessage {
+    private class ErrorMessage {
         private final String cause = "VALIDATION FAILED";
         private List<String> description;
 

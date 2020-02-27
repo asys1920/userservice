@@ -13,7 +13,7 @@
     <artifactId>userservice</artifactId>
     <version>1.0.0</version>
     <name>userservice</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Service for user management</description>
 
     <properties>
         <java.version>11</java.version>

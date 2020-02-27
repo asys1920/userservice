@@ -1,12 +1,16 @@
 package com.asys1920.service.controller;
 
 import com.asys1920.dto.UserDTO;
+import com.asys1920.dto.UserDTO;
 import com.asys1920.mapper.UserMapper;
 import com.asys1920.model.User;
 import com.asys1920.service.exceptions.UserAlreadyExsitsException;
 import com.asys1920.service.exceptions.ValidationException;
 import com.asys1920.service.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,13 @@ public class UserController {
         this.userService = userService;
     }
 
+
+    @ApiOperation(value = "Create a new user", response = UserDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully created user"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH)
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExsitsException {
         validateUserDTO(userDTO);
@@ -36,9 +47,12 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-
-
-
+    @ApiOperation(value = "Get a existing user", response = UserDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully fetched user"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH + "/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
@@ -47,6 +61,12 @@ public class UserController {
                 HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Updates a specific User", response = UserDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully updated user"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
     @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH + "/{id}")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) throws ValidationException {
         validateUserDTO(userDTO);
@@ -55,7 +75,13 @@ public class UserController {
         UserDTO responseDTO = UserMapper.INSTANCE.userToUserDTO(createdUser);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
-
+    
+    @ApiOperation(value = "Delete a existing user", response = UserDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleted the user"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH + "/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         userService.deleteUser(id);

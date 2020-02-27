@@ -1,27 +1,19 @@
 package com.asys1920.service;
 
-import com.asys1920.model.Bill;
 import com.asys1920.model.User;
 import com.asys1920.service.repository.UserRepository;
-import com.asys1920.service.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Instant;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,12 +53,6 @@ class UserServiceApplicationTests {
                 .andExpect(status().isNotFound());
     }
 
-    /* Test POST /users */
-    @Test
-    public void should_ReturnValidUser_When_CreatingValidUser() throws Exception {
-        JSONObject body = getValidUser();
-        //Create a user
-    }
 
     @Test
     public void should_ReturnErrorMessage_When_CreatingInvalidUser_InvalidEmail() throws Exception {

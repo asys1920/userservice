@@ -1,4 +1,4 @@
-package com.asys1920.service.config;
+package com.asys1920.userservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

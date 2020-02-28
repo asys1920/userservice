@@ -1,4 +1,4 @@
-package com.asys1920.service;
+package com.asys1920.userservice;
 
 import com.asys1920.util.GracefulShutdown;
 import org.springframework.beans.factory.annotation.Qualifier;

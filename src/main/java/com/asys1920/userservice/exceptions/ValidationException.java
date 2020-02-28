@@ -1,4 +1,4 @@
-package com.asys1920.service.exceptions;
+package com.asys1920.userservice.exceptions;
 
 import javax.validation.ConstraintViolation;
 import java.util.Set;

@@ -25,7 +25,7 @@ import java.util.Set;
 @RestController
 public class UserController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     final UserService userService;
     private final String PATH = "/users";
 

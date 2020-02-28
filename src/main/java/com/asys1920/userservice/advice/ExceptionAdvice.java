@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component("userAdvice")
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionAdvice.class);
     @ExceptionHandler({RepositoryConstraintViolationException.class})
     public ResponseEntity<ErrorMessage> handleRepositoryConstraintViolationException(
             RepositoryConstraintViolationException ex) {

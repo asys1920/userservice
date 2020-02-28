@@ -47,7 +47,7 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Get a existing user", response = UserDTO.class)
+    @ApiOperation(value = "Get an existing user", response = UserDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully fetched user"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -76,7 +76,7 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
     
-    @ApiOperation(value = "Delete a existing user", response = UserDTO.class)
+    @ApiOperation(value = "Delete an existing user", response = UserDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully deleted the user"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),

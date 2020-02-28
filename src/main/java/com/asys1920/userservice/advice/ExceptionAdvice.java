@@ -1,8 +1,7 @@
 package com.asys1920.userservice.advice;
 
-import com.asys1920.userservice.exceptions.UserAlreadyExsitsException;
+import com.asys1920.userservice.exceptions.UserAlreadyExistsException;
 import com.asys1920.userservice.exceptions.ValidationException;
-import com.asys1920.userservice.service.UserService;
 import lombok.Data;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
@@ -42,7 +41,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(jsonFromException(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {UserAlreadyExsitsException.class})
+    @ExceptionHandler(value = {UserAlreadyExistsException.class})
     @ResponseBody
     public ResponseEntity<String> handleAlreadyExistsException(Exception ex) {
         LOG.error(ex.getMessage(), ex);

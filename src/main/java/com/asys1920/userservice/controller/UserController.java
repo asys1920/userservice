@@ -3,7 +3,7 @@ package com.asys1920.userservice.controller;
 import com.asys1920.dto.UserDTO;
 import com.asys1920.mapper.UserMapper;
 import com.asys1920.model.User;
-import com.asys1920.userservice.exceptions.UserAlreadyExsitsException;
+import com.asys1920.userservice.exceptions.UserAlreadyExistsException;
 import com.asys1920.userservice.exceptions.ValidationException;
 import com.asys1920.userservice.service.UserService;
 import io.swagger.annotations.Api;
@@ -41,7 +41,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = PATH)
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExsitsException {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws ValidationException, UserAlreadyExistsException {
         LOG.trace(String.format("GET %s initiated", PATH));
         validateUserDTO(userDTO);
         User sendUser = UserMapper.INSTANCE.userDTOtoUser(userDTO);

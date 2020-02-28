@@ -1,7 +1,7 @@
-package com.asys1920.service;
+package com.asys1920.userservice;
 
 import com.asys1920.model.User;
-import com.asys1920.service.repository.UserRepository;
+import com.asys1920.userservice.repository.UserRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;

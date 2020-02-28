@@ -1,4 +1,4 @@
-package com.asys1920.service.repository;
+package com.asys1920.userservice.repository;
 
 
 import com.asys1920.model.User;
